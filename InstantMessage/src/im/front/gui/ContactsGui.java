@@ -27,7 +27,7 @@ public class ContactsGui extends JFrame implements ActionListener {
 	public ContactsGui() {
 		FakeData data = new FakeData();
 		Contacts contacts = data.getContacts();
-		int size = contacts.getContacts().size();
+		int size = contacts.getContacts().size(); 
 		scrollPane.setSize(new Dimension(150, 80));
 
 		JPanel panel = new JPanel();
