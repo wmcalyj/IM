@@ -18,12 +18,12 @@ import javax.swing.JTextField;
 public class LoginGui extends JFrame implements ActionListener {
 	private JFrame frame = new JFrame("IM");
 	private JPanel panel = new JPanel();
-	private JLabel username = new JLabel("ÓÃ»§Ãû");
-	private JLabel password = new JLabel("ÃÜÂë");
+	private JLabel username = new JLabel("ç”¨æˆ·å");
+	private JLabel password = new JLabel("å¯†ç ");
 	private JTextField usernameInput = new JTextField();
 	private JPasswordField passwordInput = new JPasswordField();
-	private JButton submit = new JButton("È·ÈÏ");
-	private JButton cancel = new JButton("È¡Ïû");
+	private JButton submit = new JButton("ç¡®è®¤");
+	private JButton cancel = new JButton("å–æ¶ˆ");
 
 	private void setView() {
 		// Add listener to buttons
