@@ -7,6 +7,7 @@ public class MessageService {
 		System.out.println("Test2");
 		System.out.println("hello world");
 		System.out.println("Hello Hell");
+		System.out.println("Git sucks");
 	}
 
 }
