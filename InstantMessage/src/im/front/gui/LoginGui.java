@@ -19,7 +19,7 @@ public class LoginGui extends JFrame implements ActionListener {
 	private JFrame frame = new JFrame("IM");
 	private JPanel panel = new JPanel();
 	private JLabel username = new JLabel("用户名");
-	private JLabel password = new JLabel("密码");
+	private JLabel password = new JLabel("密");
 	private JTextField usernameInput = new JTextField();
 	private JPasswordField passwordInput = new JPasswordField();
 	private JButton submit = new JButton("确认");
