@@ -65,7 +65,7 @@ public class LoginGui extends JFrame implements ActionListener {
 			// TODO
 			// Check username & password
 			frame.dispose();
-			new ChatGui();
+			new ContactsGui();
 			System.out.println("New Window");
 		} else if (e.getSource() == cancel) {
 			frame.dispose();
