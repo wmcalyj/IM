@@ -1,5 +1,7 @@
 package im.front.gui;
 
+import im.user.User;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -11,9 +13,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class LoginGui extends JFrame implements ActionListener {
 	private JFrame frame = new JFrame("IM");
@@ -61,11 +66,20 @@ public class LoginGui extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == submit) {
+			if(StringUtils.isEmpty(usernameInput.getText()))
+			{
+				JOptionPane.showMessageDialog(frame,
+					    "請輸入賬號或密碼",
+					    "Inane error",
+					    JOptionPane.ERROR_MESSAGE);
+			}
+			User user = new User();
+			user.setAccountNumber(usernameInput.getText());
 			System.out.println("Submit");
 			// TODO
 			// Check username & password
 			frame.dispose();
-			new ContactsGui();
+			new ContactsGui(user);
 			System.out.println("New Window");
 		} else if (e.getSource() == cancel) {
 			frame.dispose();

@@ -1,8 +1,8 @@
 package im.front.gui;
 
 import im.contacts.Contacts;
+import im.user.User;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -23,8 +23,16 @@ public class ContactsGui extends JFrame implements ActionListener {
 
 	private JFrame frame = new JFrame("Contacts");
 	private JScrollPane scrollPane = new JScrollPane();
+	private User user;
 
-	public ContactsGui() {
+	public ContactsGui(final User user) {
+		this.user = user;
+		setView();
+		
+	}
+
+	public void setView()
+	{
 		FakeData data = new FakeData();
 		Contacts contacts = data.getContacts();
 		int size = contacts.getContacts().size(); 
@@ -44,7 +52,8 @@ public class ContactsGui extends JFrame implements ActionListener {
 					if (e.getClickCount() == 2) {
 						// TODO
 						// Pop up the chat window
-						System.out.println(e.getSource().toString());
+						ChatGui chat = new ChatGui(((JLabel)e.getSource()).getText(), user);
+						System.out.println(((JLabel)e.getSource()).getText());
 					}
 				}
 			});
@@ -56,10 +65,17 @@ public class ContactsGui extends JFrame implements ActionListener {
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(e.getSource());
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }
