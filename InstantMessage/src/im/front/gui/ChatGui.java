@@ -1,10 +1,11 @@
 package im.front.gui;
 
 import im.user.User;
+import im.webservice.messagepackage.MessagePackage;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,15 +16,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.apache.commons.lang3.StringUtils;
+
+import zzz.zzz.zzz.FakeWebservice;
+
 public class ChatGui extends JFrame implements ActionListener {
 	private User user;
-
+	private String target;
+	private FakeWebservice ws = new FakeWebservice();
 	JFrame frame = new JFrame();
 	JPanel win1 = new JPanel();
 	JPanel win2 = new JPanel();
 	JPanel win3 = new JPanel();
+	JPanel main = new JPanel();
 	JTextArea history = new JTextArea();
-	JScrollPane scrollHistory = new JScrollPane();
+	JScrollPane scrollHistory = new JScrollPane(history);
 	JTextArea input = new JTextArea();
 	JScrollPane scrollInput = new JScrollPane(input);
 
@@ -33,14 +40,15 @@ public class ChatGui extends JFrame implements ActionListener {
 	public ChatGui(String contactName, final User user) {
 		setView(contactName);
 		this.user = user;
+		this.target = contactName;
 	}
 
 	private void setView(String contactName) {
 		submit.addActionListener(this);
 		close.addActionListener(this);
 
-		submit.setSize(new Dimension(80, 50));
-		close.setSize(new Dimension(80, 50));
+		submit.setPreferredSize(new Dimension(80, 50));
+		close.setPreferredSize(new Dimension(80, 50));
 
 		history.setLineWrap(true);
 		history.setWrapStyleWord(true);
@@ -55,31 +63,51 @@ public class ChatGui extends JFrame implements ActionListener {
 		scrollInput.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		// input.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+		win1.setPreferredSize(new Dimension(550, 350));
 		win1.add(scrollHistory);
+		win2.setPreferredSize(new Dimension(550, 150));
 		win2.add(scrollInput);
 
-		win3.setPreferredSize(new Dimension(500, 50));
+		win3.setPreferredSize(new Dimension(550, 50));
 		// win3.setLayout(new GridLayout(1, 2));
 		win3.add(submit, 0);
 		win3.add(close, 1);
 
-		frame.setSize(550, 450);
-		frame.setLayout(new GridLayout(3, 1));
-		frame.add(win1, 0);
-		frame.add(win2, 1);
-		frame.add(win3, 2);
-		frame.setVisible(true);
+		main.setLayout(new BorderLayout());
+		main.setPreferredSize(new Dimension(550, 550));
+		main.add(win1, BorderLayout.NORTH);
+		main.add(win2, BorderLayout.CENTER);
+		main.add(win3, BorderLayout.SOUTH);
+		frame.add(main);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		pack();
+		frame.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == submit) {
-			System.out.println("submit");
+			if (StringUtils.isNotEmpty(input.getText())) {
+				sendToService(this.user.getAccountNumber(), this.target,
+						input.getText());
+				history.append(receiveFromService().getSource() + "\n"
+						+ receiveFromService().getText());
+				history.append("\n");
+			}
 		}
 
+	}
+
+	public void sendToService(String source, String target, String text) {
+		MessagePackage mp = new MessagePackage(source, target, text);
+		ws.sendPackage(mp);
+	}
+
+	// Testing purpose
+	public MessagePackage receiveFromService() {
+		// TODO
+		return ws.receivePackage();
 	}
 
 	public User getUser() {
@@ -88,6 +116,14 @@ public class ChatGui extends JFrame implements ActionListener {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
 	}
 
 }
