@@ -1,0 +1,8 @@
+For Web Service:
+	1. Web Service needs to create an asymmetric-encryption and send keys to clients.
+	      We will use Diffie–Hellman key exchange.
+	   	  http://www.cs.ucf.edu/~dmarino/ucf/cis3362/progs/DiffieHellmanBigInt.java
+	2. We will use SHA-512 to hash the password and the hash code will be stored in the web
+		  service rather than local machine.
+	3. The message package will contain source (username/accountNumber) & message for current 
+		  plan
