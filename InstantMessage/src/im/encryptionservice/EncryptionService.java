@@ -2,6 +2,7 @@ package im.encryptionservice;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.security.Security;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -9,6 +10,8 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * 
@@ -114,5 +117,10 @@ public class EncryptionService {
 	// digest.update(output);
 	// return new BigInteger(1, digest.digest());
 	// }
+	
+	public void myOwnEncrypt()
+	{
+		Security.addProvider(new BouncyCastleProvider());
+	}
 
 }
