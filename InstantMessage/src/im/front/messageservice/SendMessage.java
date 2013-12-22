@@ -17,6 +17,7 @@ public class SendMessage extends Thread implements Runnable {
 				socket.getOutputStream());
 		out.flush();
 		out.writeObject(message);
+		// out.close();
 	}
 
 }

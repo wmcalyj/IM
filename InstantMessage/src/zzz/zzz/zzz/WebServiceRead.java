@@ -13,10 +13,12 @@ public class WebServiceRead extends Thread implements Runnable {
 
 	public WebServiceRead(ServerSocket socket) throws Exception {
 		serverSocket = socket;
+		read();
 	}
 
 	public boolean read() {
 		Socket clientSocket = null;
+
 		try {
 
 			while (true) {
@@ -24,9 +26,11 @@ public class WebServiceRead extends Thread implements Runnable {
 				System.out.println("Succeed connecting to server");
 				ObjectInputStream input = new ObjectInputStream(
 						clientSocket.getInputStream());
+				System.out.println("FLAG");
 				MessagePackage mp = (MessagePackage) input.readObject();
-				System.out.println(mp.toString());
+				System.out.println("Server received: " + mp.toString());
 				input.close();
+				clientSocket.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -18,7 +19,8 @@ public class DefaultMessageService {
 
 	public DefaultMessageService() {
 		try {
-			socket = new Socket(CenterServerInfo.HOST, CenterServerInfo.PORT);
+			InetAddress host = InetAddress.getLocalHost();
+			socket = new Socket(host, CenterServerInfo.PORT);
 			receiveMessage = new ReceiveMessage();
 			sendMessage = new SendMessage();
 			Thread receive = new Thread(receiveMessage);
@@ -36,11 +38,12 @@ public class DefaultMessageService {
 
 	public boolean send(MessagePackage message) {
 		try {
-
-			sendMessage.send(message, socket);
-			byte[] bytes = serialize(message);
-			size = bytes.length;
-			sendMessage.send(bytes, socket);
+			InetAddress host = InetAddress.getLocalHost();
+			Socket sendSocket = new Socket(host, CenterServerInfo.PORT);
+			sendMessage.send(message, sendSocket);
+			// byte[] bytes = serialize(message);
+			// size = bytes.length;
+			// sendMessage.send(bytes, socket);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

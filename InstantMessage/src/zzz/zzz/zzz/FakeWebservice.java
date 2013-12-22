@@ -18,6 +18,7 @@ public class FakeWebservice extends Thread implements Runnable {
 			Thread t2 = new Thread(wsw);
 			t1.run();
 			t2.run();
+			wsr.read();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
