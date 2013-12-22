@@ -11,10 +11,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class DefaultMessageService {
-	static Socket socket;
-	static ReceiveMessage receiveMessage;
-	static SendMessage sendMessage;
-	static int size = -1;
+	Socket socket;
+	ReceiveMessage receiveMessage;
+	SendMessage sendMessage;
+	int size = -1;
 
 	public DefaultMessageService() {
 		try {
@@ -34,8 +34,9 @@ public class DefaultMessageService {
 		}
 	}
 
-	public static boolean send(MessagePackage message) {
+	public boolean send(MessagePackage message) {
 		try {
+
 			sendMessage.send(message, socket);
 			byte[] bytes = serialize(message);
 			size = bytes.length;
@@ -47,7 +48,7 @@ public class DefaultMessageService {
 		return true;
 	}
 
-	public static boolean receive() {
+	public boolean receive() {
 		try {
 			byte[] bytes;
 			if (size != -1) {

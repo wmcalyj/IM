@@ -26,7 +26,7 @@ public class ChatGui extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private User user;
 	private String target;
-//	private DefaultMessageService ws = new DefaultMessageService();
+	private DefaultMessageService ws = new DefaultMessageService();
 	JFrame frame = new JFrame();
 	JPanel win1 = new JPanel();
 	JPanel win2 = new JPanel();
@@ -104,12 +104,11 @@ public class ChatGui extends JFrame implements ActionListener {
 
 	public void sendToService(String source, String target, String text) {
 		MessagePackage mp = new MessagePackage(source, target, text);
-		for (int i = 0; i < 5; i++) {
-			if (DefaultMessageService.send(mp)) {
-				System.out.println("Successfully send message");
-				// return;
-			}
+		if (ws.send(mp)) {
+			System.out.println("Successfully send message");
+			// return;
 		}
+
 		System.out.println("Fail to send message");
 	}
 
@@ -117,7 +116,7 @@ public class ChatGui extends JFrame implements ActionListener {
 	// TODO
 	public MessagePackage receiveFromService() {
 		MessagePackage message = new MessagePackage();
-		if (DefaultMessageService.receive()) {
+		if (ws.receive()) {
 			System.out.println("Successfully receive message");
 			return message;
 		}

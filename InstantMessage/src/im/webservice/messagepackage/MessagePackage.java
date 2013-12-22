@@ -54,4 +54,10 @@ public class MessagePackage implements Serializable {
 		this.text = target.getText();
 		this.target = target.getTarget();
 	}
+
+	@Override
+	public String toString() {
+		return "MessagePackage [Source: " + this.source + ", Target: "
+				+ this.target + ", Text: " + this.text + ".]";
+	}
 }
