@@ -7,22 +7,13 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ReceiveMessage extends Thread implements Runnable {
-	public MessagePackage receive(Socket socket) {
+	public MessagePackage receive(Socket socket) throws Exception {
 
-		try {
-			ObjectInputStream in = new ObjectInputStream(
-					socket.getInputStream());
-			MessagePackage messageObject = (MessagePackage) in.readObject();
-			String messageText = messageObject.getText();
-			System.out.println("I have received: " + messageText);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+		MessagePackage messageObject = (MessagePackage) in.readObject();
+		String messageText = messageObject.getText();
+		System.out.println("I have received: " + messageText);
+		return messageObject;
 
 	}
 }

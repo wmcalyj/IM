@@ -15,6 +15,10 @@ public class MessagePackage {
 		this.text = text;
 	}
 
+	public MessagePackage() {
+
+	}
+
 	public String getSource() {
 		return source;
 	}
@@ -37,5 +41,11 @@ public class MessagePackage {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public void clone(MessagePackage target) {
+		this.source = target.getSource();
+		this.text = target.getText();
+		this.target = target.getTarget();
 	}
 }

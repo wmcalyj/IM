@@ -1,5 +1,6 @@
 package im.front.gui;
 
+import im.front.messageservice.DefaultMessageService;
 import im.user.User;
 import im.webservice.messagepackage.MessagePackage;
 
@@ -18,8 +19,6 @@ import javax.swing.JTextArea;
 
 import org.apache.commons.lang3.StringUtils;
 
-import zzz.zzz.zzz.FakeWebservice;
-
 public class ChatGui extends JFrame implements ActionListener {
 	/**
 	 * 
@@ -27,7 +26,7 @@ public class ChatGui extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private User user;
 	private String target;
-	private FakeWebservice ws = new FakeWebservice();
+	private DefaultMessageService ws = new DefaultMessageService();
 	JFrame frame = new JFrame();
 	JPanel win1 = new JPanel();
 	JPanel win2 = new JPanel();
@@ -105,13 +104,23 @@ public class ChatGui extends JFrame implements ActionListener {
 
 	public void sendToService(String source, String target, String text) {
 		MessagePackage mp = new MessagePackage(source, target, text);
-		ws.sendPackage(mp);
+		if (ws.send(mp)) {
+			System.out.println("Successfully send message");
+			return;
+		}
+		System.out.println("Fail to send message");
 	}
 
 	// Testing purpose
+	// TODO
 	public MessagePackage receiveFromService() {
-		// TODO
-		return ws.receivePackage();
+		MessagePackage message = new MessagePackage();
+		if (ws.receive(message)) {
+			System.out.println("Successfully receive message");
+			return message;
+		}
+		System.out.println("Fail to receive message");
+		return null;
 	}
 
 	public User getUser() {
