@@ -8,3 +8,4 @@ public class XMLConstants {
 	static final public String ITEM = "item";
 	static final public String CONFIG = "config";
 }
+
