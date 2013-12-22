@@ -21,6 +21,10 @@ import org.apache.commons.lang3.StringUtils;
 import zzz.zzz.zzz.FakeWebservice;
 
 public class ChatGui extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private User user;
 	private String target;
 	private FakeWebservice ws = new FakeWebservice();
