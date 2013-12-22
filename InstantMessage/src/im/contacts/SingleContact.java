@@ -11,6 +11,7 @@ public class SingleContact {
 	private String name;
 	private String accountNumber;
 	private boolean online;
+	private String publicKey;
 
 	public String getName() {
 		return name;
@@ -34,6 +35,14 @@ public class SingleContact {
 
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
+	}
+
+	public String getPublicKey() {
+		return publicKey;
+	}
+
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
 	}
 
 }
