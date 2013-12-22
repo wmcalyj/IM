@@ -16,6 +16,10 @@ public class DefaultMessageService {
 			socket = new Socket(CenterServerInfo.HOST, CenterServerInfo.PORT);
 			receiveMessage = new ReceiveMessage();
 			sendMessage = new SendMessage();
+			Thread receive = new Thread(receiveMessage);
+			Thread send = new Thread(sendMessage);
+			receive.start();
+			send.start();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
