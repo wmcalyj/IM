@@ -8,7 +8,6 @@ import javax.xml.stream.XMLEventWriter;
 import org.apache.commons.lang3.StringUtils;
 
 public class DefaultXMLService {
-
 	public boolean createNewEntry(Map<String, String> userInfo) {
 		XMLWriter writer = new XMLWriter();
 		try {
@@ -40,5 +39,4 @@ public class DefaultXMLService {
 		map.putAll(reader.readConfig(XMLConstants.FILE_NAME));
 		return map;
 	}
-
 }
