@@ -13,8 +13,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 public class XMLWriter {
-
-	public void saveConfig(String username, String password) throws Exception {
+	public XMLEventWriter openFile() throws Exception {
 		// Open the file if it's already there
 		// create an XMLOutputFactory
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -22,27 +21,50 @@ public class XMLWriter {
 		XMLEventWriter eventWriter = outputFactory
 				.createXMLEventWriter(new FileOutputStream(
 						XMLConstants.FILE_NAME));
-
 		// create an EventFactory
 		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 		XMLEvent end = eventFactory.createDTD("\n");
+
 		// create and write Start Tag
 		StartDocument startDocument = eventFactory.createStartDocument();
 		eventWriter.add(startDocument);
+		eventWriter.add(end);
 
+		StartElement configStartElement = eventFactory.createStartElement("",
+				"", XMLConstants.CONFIG);
+		eventWriter.add(configStartElement);
+		eventWriter.add(end);
+
+		return eventWriter;
+	}
+
+	public void closeFile(XMLEventWriter eventWriter) throws XMLStreamException {
+		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+		eventWriter.add(eventFactory
+				.createEndElement("", "", XMLConstants.ITEM));
+		XMLEvent end = eventFactory.createDTD("\n");
+		eventWriter.add(end);
+		eventWriter.add(eventFactory.createEndDocument());
+		eventWriter.close();
+	}
+
+	public void saveConfig(XMLEventWriter eventWriter, String username,
+			String password) throws Exception {
+		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+		XMLEvent end = eventFactory.createDTD("\n");
 		// create config open tag
 		StartElement configStartElement = eventFactory.createStartElement("",
 				"", XMLConstants.ITEM);
 		eventWriter.add(configStartElement);
 		eventWriter.add(end);
 		// Write the different nodes
+
 		createNode(eventWriter, XMLConstants.USER, username);
 		createNode(eventWriter, XMLConstants.PASSWORD, password);
 		eventWriter.add(eventFactory
 				.createEndElement("", "", XMLConstants.ITEM));
 		eventWriter.add(end);
-		eventWriter.add(eventFactory.createEndDocument());
-		eventWriter.close();
+
 	}
 
 	private void createNode(XMLEventWriter eventWriter, String name,

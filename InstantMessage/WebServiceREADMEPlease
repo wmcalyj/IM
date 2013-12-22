@@ -6,3 +6,5 @@ For Web Service:
 		  service rather than local machine.
 	3. The message package will contain source (username/accountNumber) & message for current 
 		  plan
+	4. We will use map to pre-load all user info, when we want to add a new user info, we add
+		  it to map and call DefaultXMLService, pass the map to re-create the whole xml file

@@ -3,8 +3,8 @@ package im.xmlservice;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -14,8 +14,9 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 public class XMLRead {
-	public List<XMLModel> readConfig(String configFile) {
-		List<XMLModel> items = new ArrayList<XMLModel>();
+	public Map<String, String> readConfig(String configFile) {
+		Map<String, String> items = new HashMap<String, String>();
+		// List<XMLModel> items = new ArrayList<XMLModel>();
 		try {
 			// First, create a new XMLInputFactory
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -56,7 +57,7 @@ public class XMLRead {
 					EndElement endElement = event.asEndElement();
 					if (endElement.getName().getLocalPart()
 							.equals(XMLConstants.ITEM)) {
-						items.add(item);
+						items.put(item.getUsername(), item.getPassword());
 					}
 				}
 
