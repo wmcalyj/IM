@@ -17,7 +17,7 @@ public class Run {
 		LoginGui login = new LoginGui();
 		login.Login();
 		EncryptionService es = new EncryptionService();
-		es.testEncrypt("测试下中文看看，诶哟卧槽，还真能打中文？！fuck！！！牛逼！！！");
+		es.testEncrypt("���������������������������������������������������������������fuck������������������������");
 
 		// Test client side server
 		ServerSocket serverSocket = null;
@@ -33,25 +33,20 @@ public class Run {
 		Socket clientSocket = null;
 		try {
 			clientSocket = serverSocket.accept();
-			System.out.println("连上server");
+			System.out.println("������server");
 		} catch (IOException e) {
 			System.err.println("Accept failed.");
 			System.exit(1);
 		}
-		while (true) {
-			DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-			DataInputStream input = new DataInputStream(clientSocket.getInputStream());
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					clientSocket.getInputStream()));
-			StringBuilder sb = new StringBuilder();
-			String inputLine, outputLine;
+		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+		DataInputStream input = new DataInputStream(clientSocket.getInputStream());
+		//while (true) {
 			System.out.println("TEST");
-			while ((inputLine = input.readLine()) != null)
-				sb.append(inputLine);
-			System.out.println("Server receives: " + sb.toString());
+			System.out.println(input.read());
+			
 			out.close();
-			in.close();
-		}
+			input.close();
+		//}
 		// clientSocket.close();
 		// serverSocket.close();\
 		
