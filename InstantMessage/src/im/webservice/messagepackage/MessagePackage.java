@@ -1,10 +1,16 @@
 package im.webservice.messagepackage;
 
+import java.io.Serializable;
+
 /**
  * @author mengchaow
  * 
  */
-public class MessagePackage {
+public class MessagePackage implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String source;
 	private String target;
 	private String text;

@@ -104,9 +104,11 @@ public class ChatGui extends JFrame implements ActionListener {
 
 	public void sendToService(String source, String target, String text) {
 		MessagePackage mp = new MessagePackage(source, target, text);
-		if (ws.send(mp)) {
-			System.out.println("Successfully send message");
-			return;
+		for (int i = 0; i < 5; i++) {
+			if (ws.send(mp)) {
+				System.out.println("Successfully send message");
+				// return;
+			}
 		}
 		System.out.println("Fail to send message");
 	}
@@ -115,7 +117,7 @@ public class ChatGui extends JFrame implements ActionListener {
 	// TODO
 	public MessagePackage receiveFromService() {
 		MessagePackage message = new MessagePackage();
-		if (ws.receive(message)) {
+		if (ws.receive()) {
 			System.out.println("Successfully receive message");
 			return message;
 		}
