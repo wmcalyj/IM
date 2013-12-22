@@ -21,6 +21,7 @@ public class Run {
 		EncryptionService es = new EncryptionService();
 		es.testEncrypt("���������������������������������������������������������������fuck������������������������");
 		FakeWebservice fws = new FakeWebservice();
+		
 		// Test client side server
 
 	}
