@@ -32,22 +32,26 @@ public class Run {
 		Socket clientSocket = null;
 		try {
 			clientSocket = serverSocket.accept();
+			System.out.println("连上server");
 		} catch (IOException e) {
 			System.err.println("Accept failed.");
 			System.exit(1);
 		}
-		while (true) {
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),
-					true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					clientSocket.getInputStream()));
-			String inputLine, outputLine;
-
-			out.close();
-			in.close();
-		}
-//		clientSocket.close();
-//		serverSocket.close();
+		// while (true) {
+		PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+		BufferedReader in = new BufferedReader(new InputStreamReader(
+				clientSocket.getInputStream()));
+		StringBuilder sb = new StringBuilder();
+		String inputLine, outputLine;
+		System.out.println("TEST");
+		if ((inputLine = in.readLine()) != null)
+			sb.append(inputLine);
+		System.out.println("Server receives: " + sb.toString());
+		out.close();
+		in.close();
+		// }
+		// clientSocket.close();
+		// serverSocket.close();
 	}
 
 }
