@@ -3,6 +3,7 @@ package im.mainclass;
 import im.encryptionservice.EncryptionService;
 import im.front.gui.LoginGui;
 import im.front.messageservice.CenterServerInfo;
+import im.front.messageservice.DefaultMessageService;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -21,7 +22,8 @@ public class Run {
 		EncryptionService es = new EncryptionService();
 		es.testEncrypt("���������������������������������������������������������������fuck������������������������");
 		FakeWebservice fws = new FakeWebservice();
-		
+//		DefaultMessageService ws = new DefaultMessageService();
+
 		// Test client side server
 
 	}
