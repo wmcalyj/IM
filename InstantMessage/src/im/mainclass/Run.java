@@ -1,7 +1,6 @@
 package im.mainclass;
 
 import im.encryptionservice.EncryptionService;
-import im.front.gui.LoginGui;
 import im.front.messageservice.CenterServerInfo;
 import im.front.messageservice.DefaultMessageService;
 
@@ -12,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import com.wmcalyj.im.client.gui.LoginGui;
 
 import zzz.zzz.zzz.FakeWebservice;
 

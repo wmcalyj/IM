@@ -1,4 +1,4 @@
-package im.front.gui;
+package com.wmcalyj.im.client.gui;
 
 import im.front.messageservice.DefaultMessageService;
 import im.user.User;

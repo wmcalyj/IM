@@ -1,4 +1,4 @@
-package im.front.gui;
+package com.wmcalyj.im.client.gui;
 
 import im.contacts.Contacts;
 import im.user.User;
