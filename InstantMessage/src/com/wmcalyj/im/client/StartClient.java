@@ -9,7 +9,7 @@ public class StartClient {
 		LoginGui login = new LoginGui();
 		login.Login();
 		// EncryptionService es = new EncryptionService();
-		// es.testEncrypt("���������������������������������������������������������������fuck������������������������");
+		// es.testEncrypt("���������������������������������������������������������������������������������������");
 		// FakeWebservice fws = new FakeWebservice();
 		// // DefaultMessageService ws = new DefaultMessageService();
 		//

@@ -31,6 +31,8 @@ public class ContactsGui extends JFrame implements ActionListener {
 		this.user = user;
 		if (socket != null) {
 			this.setSocket(socket);
+		} else {
+			System.out.println("Socket is null in contacts gui");
 		}
 		setView();
 

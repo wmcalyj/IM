@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.net.Socket;
 
 import javax.swing.BorderFactory;
@@ -21,7 +20,8 @@ import javax.swing.JTextArea;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.wmcalyj.im.shared.CommunicationService;
+import com.wmcalyj.im.shared.communication.ListenToSocket;
+import com.wmcalyj.im.shared.communication.WriteToSocket;
 import com.wmcalyj.im.shared.data.Message;
 
 public class ChatGui extends JFrame implements ActionListener {
@@ -50,7 +50,11 @@ public class ChatGui extends JFrame implements ActionListener {
 		setView(contactName);
 		this.user = user;
 		this.target = contactName;
-		this.setSocket(socket);
+		this.socket = socket;
+		if (this.socket == null) {
+			System.out.println("Socket is null in ChatGui");
+		}
+
 	}
 
 	private void setView(String contactName) {
@@ -101,8 +105,8 @@ public class ChatGui extends JFrame implements ActionListener {
 			if (StringUtils.isNotEmpty(input.getText())) {
 				sendToService(this.user.getAccountNumber(), this.target,
 						input.getText());
-				history.append(receiveFromService().getSource() + "\n"
-						+ receiveFromService().getText());
+				// history.append(receiveFromService().getSource() + "\n"
+				// + receiveFromService().getText());
 				history.append("\n");
 			}
 		}
@@ -111,9 +115,10 @@ public class ChatGui extends JFrame implements ActionListener {
 
 	public void sendToService(String source, String target, String text) {
 		Message message = new Message(source, target, text);
+		System.out.println(message.toString());
 		socket = getSocket();
-		if (socket != null) {
-			CommunicationService.sendMessage(socket, message);
+		if (socket != null && !socket.isClosed()) {
+			WriteToSocket.sendMessage(socket, message);
 		}
 
 		System.out.println("Successfully send message");

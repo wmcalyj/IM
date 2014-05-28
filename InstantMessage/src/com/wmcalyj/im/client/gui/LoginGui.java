@@ -22,7 +22,8 @@ import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.wmcalyj.im.shared.CommunicationService;
+import com.wmcalyj.im.shared.communication.EstablishCommunication;
+import com.wmcalyj.im.shared.communication.ListenToSocket;
 
 public class LoginGui extends JFrame implements ActionListener {
 	private JFrame frame = new JFrame("IM");
@@ -80,10 +81,15 @@ public class LoginGui extends JFrame implements ActionListener {
 			// TODO
 			// Check username & password
 			frame.dispose();
-			Socket socket = null;
+
 			try {
-				CommunicationService.establishConnection(
-						usernameInput.getText(), socket);
+				Socket socket = EstablishCommunication
+						.establishConnection(usernameInput.getText());
+				if (socket.isClosed()) {
+					System.out.println("Socket closed in LoginGui");
+					System.exit(1);
+				}
+				(new ListenToSocket(socket)).start();
 				new ContactsGui(user, socket);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block

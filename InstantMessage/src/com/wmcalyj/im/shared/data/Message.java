@@ -50,4 +50,12 @@ public class Message implements Serializable {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("Message: ");
+		sb.append("From: ").append(this.from).append(". To: ").append(this.to)
+				.append(". ").append("Message: ").append(this.message);
+		return sb.toString();
+	}
 }
