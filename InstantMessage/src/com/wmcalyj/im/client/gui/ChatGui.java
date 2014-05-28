@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -19,6 +21,9 @@ import javax.swing.JTextArea;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.wmcalyj.im.shared.CommunicationService;
+import com.wmcalyj.im.shared.data.Message;
+
 public class ChatGui extends JFrame implements ActionListener {
 	/**
 	 * 
@@ -26,7 +31,8 @@ public class ChatGui extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private User user;
 	private String target;
-	
+	private Socket socket;
+
 	JFrame frame = new JFrame();
 	JPanel win1 = new JPanel();
 	JPanel win2 = new JPanel();
@@ -40,10 +46,11 @@ public class ChatGui extends JFrame implements ActionListener {
 	JButton submit = new JButton("发送");
 	JButton close = new JButton("关闭");
 
-	public ChatGui(String contactName, final User user) {
+	public ChatGui(String contactName, final User user, final Socket socket) {
 		setView(contactName);
 		this.user = user;
 		this.target = contactName;
+		this.setSocket(socket);
 	}
 
 	private void setView(String contactName) {
@@ -103,13 +110,13 @@ public class ChatGui extends JFrame implements ActionListener {
 	}
 
 	public void sendToService(String source, String target, String text) {
-		MessagePackage mp = new MessagePackage(source, target, text);
-		if (DefaultMessageService.send(mp)) {
-			System.out.println("Successfully send message");
-			// return;
+		Message message = new Message(source, target, text);
+		socket = getSocket();
+		if (socket != null) {
+			CommunicationService.sendMessage(socket, message);
 		}
 
-		System.out.println("Fail to send message");
+		System.out.println("Successfully send message");
 	}
 
 	// Testing purpose
@@ -138,6 +145,14 @@ public class ChatGui extends JFrame implements ActionListener {
 
 	public void setTarget(String target) {
 		this.target = target;
+	}
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
 	}
 
 }

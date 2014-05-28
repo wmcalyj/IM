@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -19,6 +21,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.wmcalyj.im.shared.CommunicationService;
 
 public class LoginGui extends JFrame implements ActionListener {
 	private JFrame frame = new JFrame("IM");
@@ -66,21 +70,30 @@ public class LoginGui extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == submit) {
-			if(StringUtils.isEmpty(usernameInput.getText()))
-			{
-				JOptionPane.showMessageDialog(frame,
-					    "請輸入賬號或密碼",
-					    "Inane error",
-					    JOptionPane.ERROR_MESSAGE);
+			if (StringUtils.isEmpty(usernameInput.getText())) {
+				JOptionPane.showMessageDialog(frame, "請輸入賬號或密碼", "Inane error",
+						JOptionPane.ERROR_MESSAGE);
 			}
 			User user = new User();
 			user.setAccountNumber(usernameInput.getText());
-			System.out.println("Submit");
+			System.out.println("username: " + usernameInput.getText());
 			// TODO
 			// Check username & password
 			frame.dispose();
-			new ContactsGui(user);
+			Socket socket = null;
+			try {
+				CommunicationService.establishConnection(
+						usernameInput.getText(), socket);
+				new ContactsGui(user, socket);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 			System.out.println("New Window");
+
+			// Establish connection
+
 		} else if (e.getSource() == cancel) {
 			frame.dispose();
 		}

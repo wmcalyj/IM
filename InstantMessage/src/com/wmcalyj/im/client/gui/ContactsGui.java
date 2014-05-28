@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.Socket;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -24,18 +25,21 @@ public class ContactsGui extends JFrame implements ActionListener {
 	private JFrame frame = new JFrame("Contacts");
 	private JScrollPane scrollPane = new JScrollPane();
 	private User user;
+	private Socket socket;
 
-	public ContactsGui(final User user) {
+	public ContactsGui(final User user, Socket socket) {
 		this.user = user;
+		if (socket != null) {
+			this.setSocket(socket);
+		}
 		setView();
-		
+
 	}
 
-	public void setView()
-	{
+	public void setView() {
 		FakeData data = new FakeData();
 		Contacts contacts = data.getContacts();
-		int size = contacts.getContacts().size(); 
+		int size = contacts.getContacts().size();
 		scrollPane.setSize(new Dimension(150, 80));
 
 		JPanel panel = new JPanel();
@@ -52,8 +56,9 @@ public class ContactsGui extends JFrame implements ActionListener {
 					if (e.getClickCount() == 2) {
 						// TODO
 						// Pop up the chat window
-						ChatGui chat = new ChatGui(((JLabel)e.getSource()).getText(), user);
-						System.out.println(((JLabel)e.getSource()).getText());
+						ChatGui chat = new ChatGui(((JLabel) e.getSource())
+								.getText(), user, getSocket());
+						System.out.println(((JLabel) e.getSource()).getText());
 					}
 				}
 			});
@@ -65,6 +70,7 @@ public class ContactsGui extends JFrame implements ActionListener {
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(e.getSource());
@@ -76,6 +82,14 @@ public class ContactsGui extends JFrame implements ActionListener {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
 	}
 
 }
