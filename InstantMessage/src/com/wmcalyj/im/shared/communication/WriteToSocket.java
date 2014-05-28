@@ -7,6 +7,10 @@ import java.net.Socket;
 import com.wmcalyj.im.shared.data.Message;
 
 public class WriteToSocket {
+	// The reason why the write to socket needs to be a singlton is because,
+	// only one outputstream is supposed to write to the socket.
+	// Check the following post:
+	// http://stackoverflow.com/questions/2393179/streamcorruptedexception-invalid-type-code-ac
 	private static WriteToSocket SINGLTON = null;
 	private ObjectOutputStream out;
 	private Socket socket;
