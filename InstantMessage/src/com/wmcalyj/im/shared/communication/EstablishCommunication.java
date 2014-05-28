@@ -12,18 +12,14 @@ public class EstablishCommunication {
 	private EstablishCommunication() {
 	};
 
-	public static Socket establishConnection(String clientID)
-			throws IOException {
+	public static Socket establishConnection() throws IOException {
 		String hostName = InstantMessageConstants.HOST;
 		int portNumber = InstantMessageConstants.PORT;
 
 		System.out.println("Client starts");
 		try {
 			Socket socket = new Socket(hostName, portNumber);
-			ObjectOutputStream out = new ObjectOutputStream(
-					socket.getOutputStream());
-			Message firstMessage = new Message(clientID, "establish connection");
-			out.writeObject(firstMessage);
+
 			return socket;
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -33,5 +29,21 @@ public class EstablishCommunication {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static void sendInitMessage(Socket socket, String clientID) {
+		if (socket != null && !socket.isClosed()) {
+			try (ObjectOutputStream out = new ObjectOutputStream(
+					socket.getOutputStream());) {
+				Message firstMessage = new Message(clientID,
+						"establish connection");
+				out.writeObject(firstMessage);
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

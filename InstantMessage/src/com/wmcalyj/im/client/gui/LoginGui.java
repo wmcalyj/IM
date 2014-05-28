@@ -83,12 +83,13 @@ public class LoginGui extends JFrame implements ActionListener {
 			frame.dispose();
 
 			try {
-				Socket socket = EstablishCommunication
-						.establishConnection(usernameInput.getText());
+				Socket socket = EstablishCommunication.establishConnection();
 				if (socket.isClosed()) {
 					System.out.println("Socket closed in LoginGui");
 					System.exit(1);
 				}
+				EstablishCommunication.sendInitMessage(socket,
+						usernameInput.getText());
 				(new ListenToSocket(socket)).start();
 				new ContactsGui(user, socket);
 			} catch (IOException e1) {
