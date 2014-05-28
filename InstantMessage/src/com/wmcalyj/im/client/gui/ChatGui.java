@@ -118,7 +118,7 @@ public class ChatGui extends JFrame implements ActionListener {
 		System.out.println(message.toString());
 		socket = getSocket();
 		if (socket != null && !socket.isClosed()) {
-			WriteToSocket.sendMessage(socket, message);
+			WriteToSocket.getInstance().sendMessage(message);
 		}
 
 		System.out.println("Successfully send message");

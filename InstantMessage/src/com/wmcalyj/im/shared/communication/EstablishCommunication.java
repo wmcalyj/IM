@@ -33,17 +33,8 @@ public class EstablishCommunication {
 
 	public static void sendInitMessage(Socket socket, String clientID) {
 		if (socket != null && !socket.isClosed()) {
-			try (ObjectOutputStream out = new ObjectOutputStream(
-					socket.getOutputStream());) {
-				Message firstMessage = new Message(clientID,
-						"establish connection");
-				out.writeObject(firstMessage);
-				out.flush();
-				out.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Message firstMessage = new Message(clientID, "establish connection");
+			WriteToSocket.getInstance(socket).sendMessage(firstMessage);
 		}
 	}
 }
