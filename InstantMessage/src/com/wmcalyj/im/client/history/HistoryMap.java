@@ -1,7 +1,5 @@
 package com.wmcalyj.im.client.history;
 
-import im.contacts.SingleContact;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -9,7 +7,7 @@ import java.util.Map;
 import com.wmcalyj.im.shared.data.Message;
 
 public class HistoryMap {
-	private static Map<SingleContact, LinkedList<Message>> historyMap = null;
+	private static Map<String, LinkedList<Message>> historyMap = null;
 
 	private HistoryMap() {
 		if (historyMap == null) {
@@ -19,33 +17,39 @@ public class HistoryMap {
 
 	private static final synchronized void initHistoryMap() {
 		if (historyMap == null) {
-			historyMap = new HashMap<SingleContact, LinkedList<Message>>();
+			historyMap = new HashMap<String, LinkedList<Message>>();
 		}
 	}
 
-	public static void addToQueue(SingleContact contact, Message message) {
+	public static synchronized void addToQueue(String name, Message message) {
 		if (historyMap == null) {
 			initHistoryMap();
+			System.out.println("Init history map");
 		}
-		LinkedList<Message> queue = historyMap.get(contact);
+		LinkedList<Message> queue = historyMap.get(name);
 		if (queue == null) {
 			queue = new LinkedList<Message>();
 		}
 		queue.addFirst(message);
-		historyMap.put(contact, queue);
+		System.out.println("Message to add: " + message.toString());
+		historyMap.put(name, queue);
 	}
 
-	public static LinkedList<Message> readFromQueue(SingleContact contact) {
+	public static LinkedList<Message> readFromQueue(String name) {
 		if (historyMap == null) {
-			initHistoryMap();
+			System.out.println("History map is null");
+			return new LinkedList<Message>();
 		}
-		LinkedList<Message> queue = historyMap.get(contact);
+		LinkedList<Message> queue = historyMap.get(name);
 		if (queue == null) {
+			System.out.println("Queue to read is null");
 			return new LinkedList<Message>();
 		}
 		LinkedList<Message> returnQueue = new LinkedList<Message>();
 		Message m;
-		while ((m = queue.removeLast()) != null) {
+		while (!queue.isEmpty()) {
+			m = queue.removeLast();
+			System.out.println("Message to read: " + m.toString());
 			returnQueue.add(m);
 		}
 		return returnQueue;

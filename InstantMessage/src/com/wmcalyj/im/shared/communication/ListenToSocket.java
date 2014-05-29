@@ -48,9 +48,8 @@ public class ListenToSocket extends Thread {
 
 							System.out.println("Server message: "
 									+ fromServer.getMessage());
-							SingleContact contact = new SingleContact();
-							contact.setName(fromServer.getFrom());
-							HistoryMap.addToQueue(contact, fromServer);
+							HistoryMap.addToQueue(fromServer.getFrom(),
+									fromServer);
 							if (fromServer.equals("Bye "))
 								break;
 						} catch (ClassNotFoundException e) {

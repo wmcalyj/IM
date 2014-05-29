@@ -1,7 +1,6 @@
 package com.wmcalyj.im.client.history;
 
-import im.contacts.SingleContact;
-
+import java.awt.ComponentOrientation;
 import java.util.LinkedList;
 
 import javax.swing.JTextArea;
@@ -10,9 +9,9 @@ import com.wmcalyj.im.shared.data.Message;
 
 public class HistoryHandler extends Thread {
 	private JTextArea history = null;
-	private SingleContact contact = null;
+	private String contact = null;
 
-	public HistoryHandler(JTextArea history, SingleContact contact) {
+	public HistoryHandler(JTextArea history, String contact) {
 		super("HistoryHandler");
 		this.history = history;
 		this.contact = contact;
@@ -24,19 +23,20 @@ public class HistoryHandler extends Thread {
 			if (contact != null) {
 				LinkedList<Message> historyQueue = HistoryMap
 						.readFromQueue(contact);
-				StringBuilder newHistory = new StringBuilder();
-				for (int i = 0, j = historyQueue.size(); i < j; i++) {
-					newHistory.append(this.history.getText());
-					processMessage(newHistory, historyQueue.get(i));
+				if (historyQueue == null) {
+					System.out.println("history queue is null");
+					continue;
 				}
-				this.history.setText(newHistory.toString());
+				for (int i = 0, j = historyQueue.size(); i < j; i++) {
+					processMessage(history, historyQueue.get(i));
+				}
+
 				try {
 					sleep(1000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.println("History: " + newHistory.toString());
 			} else {
 				System.out.println("Contact is null");
 			}
@@ -44,8 +44,11 @@ public class HistoryHandler extends Thread {
 
 	}
 
-	protected void processMessage(StringBuilder sb, Message m) {
-		sb.append(m.getFrom()).append(": ").append("\n");
-		sb.append("\t").append(m.getMessage()).append("\n");
+	protected void processMessage(JTextArea history, Message m) {
+		history.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		history.append(m.getFrom());
+		history.append(":");
+		history.append(m.getMessage());
+		history.append("\n");
 	}
 }

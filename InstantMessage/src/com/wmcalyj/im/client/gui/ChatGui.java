@@ -1,16 +1,19 @@
 package com.wmcalyj.im.client.gui;
 
-import im.contacts.SingleContact;
 import im.front.messageservice.DefaultMessageService;
 import im.user.User;
 import im.webservice.messagepackage.MessagePackage;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -55,8 +58,7 @@ public class ChatGui extends JFrame implements ActionListener {
 		if (this.socket == null) {
 			System.out.println("Socket is null in ChatGui");
 		}
-		SingleContact contact = new SingleContact();
-		(new HistoryHandler(history, contact)).start();
+		(new HistoryHandler(history, "SERVER")).start();
 
 	}
 
@@ -108,12 +110,21 @@ public class ChatGui extends JFrame implements ActionListener {
 			if (StringUtils.isNotEmpty(input.getText())) {
 				sendToService(this.user.getAccountNumber(), this.target,
 						input.getText());
-				// history.append(receiveFromService().getSource() + "\n"
-				// + receiveFromService().getText());
-				history.append("\n");
+				addToHistory(history, input.getText());
 			}
+			// Reset input text box
+			input.setText("");
 		}
 
+	}
+
+	private void addToHistory(JTextArea history, String text) {
+		history.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		DateFormat df = new SimpleDateFormat("hh:mm:ss MM/dd/YYYY");
+		history.append(df.format(Calendar.getInstance().getTime()));
+		history.append("\n");
+		history.append(text);
+		history.append("\n");
 	}
 
 	public void sendToService(String source, String target, String text) {
