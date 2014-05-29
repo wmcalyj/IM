@@ -11,28 +11,28 @@ public class WriteToSocket {
 	// only one outputstream is supposed to write to the socket.
 	// Check the following post:
 	// http://stackoverflow.com/questions/2393179/streamcorruptedexception-invalid-type-code-ac
-	private static WriteToSocket SINGLTON = null;
+	private static WriteToSocket SINGLETON = null;
 	private ObjectOutputStream out;
 	private Socket socket;
 
 	public static WriteToSocket getInstance(Socket socket) {
-		if (SINGLTON == null) {
+		if (SINGLETON == null) {
 			init(socket);
 		}
-		return SINGLTON;
+		return SINGLETON;
 	}
 
 	public static WriteToSocket getInstance() {
-		if (SINGLTON != null) {
-			return SINGLTON;
+		if (SINGLETON != null) {
+			return SINGLETON;
 		} else {
 			return null;
 		}
 	}
 
 	private static synchronized void init(Socket socket) {
-		if (SINGLTON == null) {
-			SINGLTON = new WriteToSocket(socket);
+		if (SINGLETON == null) {
+			SINGLETON = new WriteToSocket(socket);
 		}
 	}
 

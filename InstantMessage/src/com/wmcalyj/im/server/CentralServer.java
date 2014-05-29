@@ -16,65 +16,75 @@ public class CentralServer {
 
 		int portNumber = InstantMessageConstants.PORT;
 
-		try (ServerSocket serverSocket = new ServerSocket(portNumber);
-				Socket clientSocket = serverSocket.accept();
-				ObjectOutputStream out = new ObjectOutputStream(
-						clientSocket.getOutputStream());
-				ObjectInputStream in = new ObjectInputStream(
-						clientSocket.getInputStream());) {
-			System.out.println("Ready to start");
-			while (in != null) {
-				Message fromClient = null;
-				Message fromServer = null;
-
-				try {
-					fromClient = (Message) in.readObject();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				if (fromClient != null) {
-					String to = fromClient.getTo();
-					if (null == to || to.length() == 0) {
-						System.out.println("This is a initial connection");
-						System.out
-								.println("Client: " + fromClient.getMessage());
-						fromServer = new Message("SERVER",
-								fromClient.getFrom(), "Hello "
-										+ fromClient.getFrom());
-						if (clientSocket.isClosed()) {
-							System.out.println("Socket closed now");
-						}
-						out.writeObject(fromServer);
-						out.flush();
-
-					} else {
-						if (fromClient.getMessage().equalsIgnoreCase("bye")) {
-							fromServer = new Message("SERVER",
-									fromClient.getFrom(), "Bye "
-											+ fromClient.getFrom());
-							out.writeObject(fromServer);
-							System.out.println("Client: "
-									+ fromClient.getMessage());
-						}
-						fromServer = new Message("SERVER",
-								fromClient.getFrom(), "You said: "
-										+ fromClient.getMessage());
-						out.writeObject(fromServer);
-						System.out
-								.println("Client: " + fromClient.getMessage());
-						out.flush();
-					}
-				}
+		try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
+			while (true) {
+				new CentralServerThread(serverSocket.accept()).start();
 			}
 		} catch (IOException e) {
-			System.out
-					.println("Exception caught when trying to listen on port "
-							+ portNumber + " or listening for a connection");
-			System.out.println(e.getMessage());
+			System.err.println("Could not listen on port " + portNumber);
 			e.printStackTrace();
+			System.exit(-1);
 		}
+
+		// try (ServerSocket serverSocket = new ServerSocket(portNumber);
+		// Socket clientSocket = serverSocket.accept();
+		// ObjectOutputStream out = new ObjectOutputStream(
+		// clientSocket.getOutputStream());
+		// ObjectInputStream in = new ObjectInputStream(
+		// clientSocket.getInputStream());) {
+		// System.out.println("Ready to start");
+		// while (in != null) {
+		// Message fromClient = null;
+		// Message fromServer = null;
+		//
+		// try {
+		// fromClient = (Message) in.readObject();
+		// } catch (ClassNotFoundException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// if (fromClient != null) {
+		// String to = fromClient.getTo();
+		// if (null == to || to.length() == 0) {
+		// System.out.println("This is a initial connection");
+		// System.out
+		// .println("Client: " + fromClient.getMessage());
+		// fromServer = new Message("SERVER",
+		// fromClient.getFrom(), "Hello "
+		// + fromClient.getFrom());
+		// if (clientSocket.isClosed()) {
+		// System.out.println("Socket closed now");
+		// }
+		// out.writeObject(fromServer);
+		// out.flush();
+		//
+		// } else {
+		// if (fromClient.getMessage().equalsIgnoreCase("bye")) {
+		// fromServer = new Message("SERVER",
+		// fromClient.getFrom(), "Bye "
+		// + fromClient.getFrom());
+		// out.writeObject(fromServer);
+		// System.out.println("Client: "
+		// + fromClient.getMessage());
+		// }
+		// fromServer = new Message("SERVER",
+		// fromClient.getFrom(), "You said: "
+		// + fromClient.getMessage());
+		// out.writeObject(fromServer);
+		// System.out
+		// .println("Client: " + fromClient.getMessage());
+		// out.flush();
+		// }
+		// }
+		// }
+		// } catch (IOException e) {
+		// System.out
+		// .println("Exception caught when trying to listen on port "
+		// + portNumber + " or listening for a connection");
+		// System.out.println(e.getMessage());
+		// e.printStackTrace();
+		// }
 	}
 
 	public void startCentralServer() {

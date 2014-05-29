@@ -1,10 +1,13 @@
 package com.wmcalyj.im.shared.communication;
 
+import im.contacts.SingleContact;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
+import com.wmcalyj.im.client.history.HistoryMap;
 import com.wmcalyj.im.shared.data.Message;
 
 public class ListenToSocket extends Thread {
@@ -39,12 +42,15 @@ public class ListenToSocket extends Thread {
 							} catch (EOFException e) {
 								continue;
 							}
-							if(fromServer == null){
+							if (fromServer == null) {
 								continue;
 							}
 
 							System.out.println("Server message: "
 									+ fromServer.getMessage());
+							SingleContact contact = new SingleContact();
+							contact.setName(fromServer.getFrom());
+							HistoryMap.addToQueue(contact, fromServer);
 							if (fromServer.equals("Bye "))
 								break;
 						} catch (ClassNotFoundException e) {

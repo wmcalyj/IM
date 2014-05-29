@@ -1,5 +1,6 @@
 package com.wmcalyj.im.client.gui;
 
+import im.contacts.SingleContact;
 import im.front.messageservice.DefaultMessageService;
 import im.user.User;
 import im.webservice.messagepackage.MessagePackage;
@@ -20,7 +21,7 @@ import javax.swing.JTextArea;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.wmcalyj.im.shared.communication.ListenToSocket;
+import com.wmcalyj.im.client.history.HistoryHandler;
 import com.wmcalyj.im.shared.communication.WriteToSocket;
 import com.wmcalyj.im.shared.data.Message;
 
@@ -54,6 +55,8 @@ public class ChatGui extends JFrame implements ActionListener {
 		if (this.socket == null) {
 			System.out.println("Socket is null in ChatGui");
 		}
+		SingleContact contact = new SingleContact();
+		(new HistoryHandler(history, contact)).start();
 
 	}
 
