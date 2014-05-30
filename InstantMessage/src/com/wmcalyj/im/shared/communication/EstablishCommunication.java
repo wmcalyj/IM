@@ -1,12 +1,19 @@
 package com.wmcalyj.im.shared.communication;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import com.wmcalyj.im.encryption.AsymmetricEncryptionService;
+import com.wmcalyj.im.shared.data.InitMessage;
 import com.wmcalyj.im.shared.data.InstantMessageConstants;
-import com.wmcalyj.im.shared.data.Message;
 
 public class EstablishCommunication {
 	private EstablishCommunication() {
@@ -15,11 +22,8 @@ public class EstablishCommunication {
 	public static Socket establishConnection() throws IOException {
 		String hostName = InstantMessageConstants.HOST;
 		int portNumber = InstantMessageConstants.PORT;
-
-		System.out.println("Client starts");
 		try {
 			Socket socket = new Socket(hostName, portNumber);
-
 			return socket;
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -32,9 +36,20 @@ public class EstablishCommunication {
 	}
 
 	public static void sendInitMessage(Socket socket, String clientID) {
-		if (socket != null && !socket.isClosed()) {
-			Message firstMessage = new Message(clientID, "establish connection");
-			WriteToSocket.getInstance(socket).sendMessage(firstMessage);
+		try {
+			PublicKey publicKey = AsymmetricEncryptionService.getService()
+					.getPublicKey();
+			InitMessage initMessage = new InitMessage(clientID, publicKey);
+			if (initMessage.isValidMessage()) {
+				WriteToSocket.getInstance(socket).sendMessage(initMessage);
+			} else {
+				System.out.println("Invalid init message");
+			}
+		} catch (InvalidKeyException | NoSuchAlgorithmException
+				| NoSuchPaddingException | IllegalBlockSizeException
+				| BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

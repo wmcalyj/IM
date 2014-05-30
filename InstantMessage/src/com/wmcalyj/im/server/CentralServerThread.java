@@ -3,11 +3,26 @@ package com.wmcalyj.im.server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import org.apache.commons.lang3.BooleanUtils;
+
+import com.wmcalyj.exceptions.message.InvalidMessageException;
+import com.wmcalyj.im.encryption.AsymmetricEncryptionService;
+import com.wmcalyj.im.server.dataManagement.OnlineUsersTable;
+import com.wmcalyj.im.shared.communication.SendMessageStrategy;
+import com.wmcalyj.im.shared.communication.Serialize;
+import com.wmcalyj.im.shared.data.InitMessage;
 import com.wmcalyj.im.shared.data.InstantMessageConstants;
 import com.wmcalyj.im.shared.data.Message;
+import com.wmcalyj.im.shared.data.RegisteredUser;
 
 public class CentralServerThread extends Thread {
 	private Socket socket = null;
@@ -24,10 +39,9 @@ public class CentralServerThread extends Thread {
 				this.socket.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(
 						this.socket.getInputStream());) {
-			System.out.println("Ready to start");
 			while (in != null) {
-				Message fromClient = null;
 				Message fromServer = null;
+				Message fromClient = null;
 
 				try {
 					fromClient = (Message) in.readObject();
@@ -37,30 +51,31 @@ public class CentralServerThread extends Thread {
 				}
 
 				if (fromClient != null) {
-					String to = fromClient.getTo();
-					if (null == to || to.length() == 0) {
-						System.out.println("This is a initial connection");
-						System.out
-								.println("Client: " + fromClient.getMessage());
+					if (isInitMessage(fromClient)) {
+
+						registerNewOnlineUser((InitMessage) fromClient);
 						fromServer = new Message("SERVER",
-								fromClient.getFrom(), "Hello "
-										+ fromClient.getFrom());
+								fromClient.getSourceID(),
+								Serialize.serialize("Hello "
+										+ fromClient.getSourceID()));
 						if (socket.isClosed()) {
 							System.out.println("Socket closed now");
 						}
-						out.writeObject(fromServer);
-						out.flush();
-
-					} else {
-
-						fromServer = new Message("SERVER",
-								fromClient.getFrom(), "You said: "
-										+ fromClient.getMessage());
-						out.writeObject(fromServer);
-						System.out
-								.println("Client: " + fromClient.getMessage());
-						out.flush();
+						try {
+							SendMessageStrategy.sendMessage(fromServer, out);
+						} catch (InvalidMessageException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						System.out.println("New user registered");
 					}
+					String to = fromClient.getDestinationID();
+
+					fromServer = new Message("SERVER",
+							fromClient.getSourceID(), getMessage(fromClient));
+					out.writeObject(fromServer);
+					out.flush();
+
 				}
 			}
 		} catch (IOException e) {
@@ -71,5 +86,48 @@ public class CentralServerThread extends Thread {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
+	}
+
+	private void registerNewOnlineUser(InitMessage fromClient) {
+		RegisteredUser newUser = new RegisteredUser(fromClient.getSourceID(),
+				fromClient.getPublicKey());
+		System.out.println("New user: " + fromClient.getSourceID());
+		OnlineUsersTable.addOnlineUser(fromClient.getSourceID(), newUser);
+		System.out.println("Public key: "
+				+ fromClient.getPublicKey().toString());
+	}
+
+	protected boolean isInitMessage(Message fromClient) {
+		return BooleanUtils.isTrue(fromClient.isInitMessage()) ? true : false;
+	}
+
+	private byte[] getMessage(Message message) {
+		PublicKey publicKey = OnlineUsersTable.getOnlineUser(
+				message.getSourceID()).getPublicKey();
+
+		try {
+			if (!message.isInitMessage()) {
+				System.out.println("Client said: "
+						+ ((String) Serialize
+								.deserialize(AsymmetricEncryptionService
+										.getService()
+										.decryptWithPublicKey(publicKey,
+												message.getMessage()))));
+				return AsymmetricEncryptionService.getService()
+						.decryptWithPublicKey(publicKey, message.getMessage());
+			}
+		} catch (InvalidKeyException | NoSuchAlgorithmException
+				| NoSuchPaddingException | IllegalBlockSizeException
+				| BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

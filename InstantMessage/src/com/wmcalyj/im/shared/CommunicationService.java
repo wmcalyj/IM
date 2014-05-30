@@ -9,8 +9,6 @@ import java.net.UnknownHostException;
 import com.wmcalyj.im.shared.data.Message;
 
 public class CommunicationService {
-	
-	
 
 	public static void sendMessage(Socket socket, Message message) {
 		try (ObjectOutputStream out = new ObjectOutputStream(
@@ -68,8 +66,9 @@ public class CommunicationService {
 			socket = new Socket(hostName, portNumber);
 			ObjectOutputStream out = new ObjectOutputStream(
 					socket.getOutputStream());
-			Message firstMessage = new Message(clientID, "establish connection");
-			out.writeObject(firstMessage);
+			// Message firstMessage = new Message(clientID,
+			// "establish connection");
+			// out.writeObject(firstMessage);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

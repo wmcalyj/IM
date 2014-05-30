@@ -1,4 +1,4 @@
-package im.encryptionservice;
+package com.wmcalyj.im.encryption;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -48,7 +48,7 @@ public class ListenToSocket extends Thread {
 
 							System.out.println("Server message: "
 									+ fromServer.getMessage());
-							HistoryMap.addToQueue(fromServer.getFrom(),
+							HistoryMap.addToQueue(fromServer.getSourceID(),
 									fromServer);
 							if (fromServer.equals("Bye "))
 								break;

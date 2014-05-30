@@ -10,11 +10,17 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.Socket;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,6 +31,7 @@ import javax.swing.JTextArea;
 import org.apache.commons.lang3.StringUtils;
 
 import com.wmcalyj.im.client.history.HistoryHandler;
+import com.wmcalyj.im.encryption.AsymmetricEncryptionService;
 import com.wmcalyj.im.shared.communication.WriteToSocket;
 import com.wmcalyj.im.shared.data.Message;
 
@@ -58,6 +65,7 @@ public class ChatGui extends JFrame implements ActionListener {
 		if (this.socket == null) {
 			System.out.println("Socket is null in ChatGui");
 		}
+		System.out.println("Start history handler");
 		(new HistoryHandler(history, "SERVER")).start();
 
 	}
@@ -128,14 +136,25 @@ public class ChatGui extends JFrame implements ActionListener {
 	}
 
 	public void sendToService(String source, String target, String text) {
-		Message message = new Message(source, target, text);
-		System.out.println(message.toString());
-		socket = getSocket();
-		if (socket != null && !socket.isClosed()) {
-			WriteToSocket.getInstance().sendMessage(message);
+
+		try {
+			byte[] encryptedText = AsymmetricEncryptionService.getService()
+					.encryptWithPrivateKey(text);
+			Message message = new Message(source, target, encryptedText);
+			System.out.println(message.toString());
+			socket = getSocket();
+			if (socket != null && !socket.isClosed()) {
+				WriteToSocket.getInstance().sendMessage(message);
+				System.out.println("Successfully send message");
+			}
+
+		} catch (InvalidKeyException | NoSuchAlgorithmException
+				| NoSuchPaddingException | IllegalBlockSizeException
+				| BadPaddingException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		System.out.println("Successfully send message");
 	}
 
 	// Testing purpose
