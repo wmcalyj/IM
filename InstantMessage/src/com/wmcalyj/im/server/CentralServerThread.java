@@ -53,7 +53,8 @@ public class CentralServerThread extends Thread {
 				if (fromClient != null) {
 					if (isInitMessage(fromClient)) {
 
-						registerNewOnlineUser((InitMessage) fromClient);
+						registerNewOnlineUser((InitMessage) fromClient, socket,
+								out);
 						fromServer = new Message("SERVER",
 								fromClient.getSourceID(),
 								Serialize.serialize("Hello "
@@ -70,12 +71,16 @@ public class CentralServerThread extends Thread {
 						System.out.println("New user registered");
 					}
 					String to = fromClient.getDestinationID();
-
-					fromServer = new Message("SERVER",
-							fromClient.getSourceID(), getMessage(fromClient));
-					out.writeObject(fromServer);
-					out.flush();
-
+					ObjectOutputStream newOut = getOOSForDestinationID(to);
+					if (newOut == null) {
+						fromServer = new Message("SERVER",
+								fromClient.getSourceID(),
+								destinationNotOnline(to));
+						out.writeObject(fromServer);
+						out.flush();
+					} else {
+						newOut.writeObject(fromClient);
+					}
 				}
 			}
 		} catch (IOException e) {
@@ -88,9 +93,20 @@ public class CentralServerThread extends Thread {
 		}
 	}
 
-	private void registerNewOnlineUser(InitMessage fromClient) {
+	private ObjectOutputStream getOOSForDestinationID(String to) {
+		RegisteredUser user = OnlineUsersTable.getOnlineUser(to);
+		if (user != null) {
+			return user.getOut();
+		} else {
+			System.out.println(to + "is not online yet");
+		}
+		return null;
+	}
+
+	private void registerNewOnlineUser(InitMessage fromClient, Socket socket,
+			ObjectOutputStream out) {
 		RegisteredUser newUser = new RegisteredUser(fromClient.getSourceID(),
-				fromClient.getPublicKey());
+				fromClient.getPublicKey(), socket, out);
 		System.out.println("New user: " + fromClient.getSourceID());
 		OnlineUsersTable.addOnlineUser(fromClient.getSourceID(), newUser);
 		System.out.println("Public key: "
@@ -107,12 +123,10 @@ public class CentralServerThread extends Thread {
 
 		try {
 			if (!message.isInitMessage()) {
-				System.out.println("Client said: "
-						+ ((String) Serialize
-								.deserialize(AsymmetricEncryptionService
-										.getService()
-										.decryptWithPublicKey(publicKey,
-												message.getMessage()))));
+				System.out.println(((String) Serialize
+						.deserialize(AsymmetricEncryptionService.getService()
+								.decryptWithPublicKey(publicKey,
+										message.getMessage()))));
 				return AsymmetricEncryptionService.getService()
 						.decryptWithPublicKey(publicKey, message.getMessage());
 			}
@@ -124,6 +138,17 @@ public class CentralServerThread extends Thread {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private byte[] destinationNotOnline(String destinationID) {
+		try {
+			return Serialize.serialize("Destination: " + destinationID
+					+ "is not online right now");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

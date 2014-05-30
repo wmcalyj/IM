@@ -65,8 +65,7 @@ public class ChatGui extends JFrame implements ActionListener {
 		if (this.socket == null) {
 			System.out.println("Socket is null in ChatGui");
 		}
-		System.out.println("Start history handler");
-		(new HistoryHandler(history, "SERVER")).start();
+		(new HistoryHandler(history, this.target)).start();
 
 	}
 

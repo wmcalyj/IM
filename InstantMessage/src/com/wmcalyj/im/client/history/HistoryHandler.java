@@ -22,21 +22,15 @@ public class HistoryHandler extends Thread {
 	@Override
 	public void run() {
 		while (true) {
-			System.out.println("Contact: " + contact);
 			if (contact != null) {
-				System.out.println("Trying to read from queue");
 				LinkedList<Message> historyQueue = HistoryMap
 						.readFromQueue(contact);
-				if (historyQueue == null) {
-					System.out.println("history queue is null");
+				if (historyQueue == null || historyQueue.size() == 0) {
 					continue;
 				}
-				if (historyQueue.size() == 0) {
-					System.out.println("This is an empty queue");
-				}
+
 				for (int i = 0, j = historyQueue.size(); i < j; i++) {
 					processMessage(history, historyQueue.get(i));
-					System.out.println("HIT");
 				}
 
 				try {
@@ -56,7 +50,6 @@ public class HistoryHandler extends Thread {
 		history.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		history.append(m.getSourceID());
 		history.append(":");
-		System.out.println("HIT PROCESS MESSAGE");
 		try {
 			if (m.getMessage() != null && m.getMessage().length > 0) {
 				String message = (String) Serialize.deserialize(m.getMessage());

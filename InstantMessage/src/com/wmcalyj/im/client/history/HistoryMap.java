@@ -42,20 +42,15 @@ public class HistoryMap {
 		}
 		LinkedList<Message> queue = historyMap.get(name);
 		if (queue == null) {
-			System.out.println("Queue to read is null");
 			return new LinkedList<Message>();
 		}
 		LinkedList<Message> returnQueue = new LinkedList<Message>();
 		Message m;
-		if (queue.isEmpty()) {
-			System.out.println("Queue is empty");
-		}
 		while (!queue.isEmpty()) {
 			m = queue.removeLast();
 			System.out.println("Message to read: " + m.toString());
 			returnQueue.add(m);
 		}
-		System.out.println("HIT READ FROM QUEUE");
 		return returnQueue;
 	}
 }
