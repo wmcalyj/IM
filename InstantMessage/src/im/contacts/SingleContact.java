@@ -1,5 +1,9 @@
 package im.contacts;
 
+import java.security.PublicKey;
+
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 
  * @author mengchaow
@@ -11,7 +15,15 @@ public class SingleContact {
 	private String name;
 	private String accountNumber;
 	private boolean online;
-	private String publicKey;
+	private PublicKey publicKey;
+
+	public SingleContact(String name, String accountNumber, boolean online,
+			PublicKey publicKey) {
+		this.name = name;
+		this.accountNumber = accountNumber;
+		this.online = online;
+		this.publicKey = publicKey;
+	}
 
 	public String getName() {
 		return name;
@@ -37,12 +49,18 @@ public class SingleContact {
 		this.accountNumber = accountNumber;
 	}
 
-	public String getPublicKey() {
+	public PublicKey getPublicKey() {
 		return publicKey;
 	}
 
-	public void setPublicKey(String publicKey) {
+	public void setPublicKey(PublicKey publicKey) {
 		this.publicKey = publicKey;
+	}
+
+	public boolean isValidContact() {
+		return StringUtils.isNotBlank(name)
+				&& StringUtils.isNotBlank(accountNumber) && publicKey != null ? true
+				: false;
 	}
 
 }

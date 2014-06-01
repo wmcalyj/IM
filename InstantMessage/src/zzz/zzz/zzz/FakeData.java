@@ -17,7 +17,7 @@ public class FakeData {
 	public Contacts getContacts() {
 		List<SingleContact> listOfContacts = new ArrayList<SingleContact>();
 		for (int i = 0; i < 10; i++) {
-			SingleContact contact = new SingleContact();
+			SingleContact contact = new SingleContact(null, null, false, null);
 			contact.setName("contact" + i);
 			contact.setOnline(true);
 			listOfContacts.add(contact);

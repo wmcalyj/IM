@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import javax.swing.JTextArea;
 
 import com.wmcalyj.im.shared.communication.Serialize;
-import com.wmcalyj.im.shared.data.Message;
+import com.wmcalyj.im.shared.data.message.NormalMessage;
 
 public class HistoryHandler extends Thread {
 	private JTextArea history = null;
@@ -23,7 +23,7 @@ public class HistoryHandler extends Thread {
 	public void run() {
 		while (true) {
 			if (contact != null) {
-				LinkedList<Message> historyQueue = HistoryMap
+				LinkedList<NormalMessage> historyQueue = HistoryMap
 						.readFromQueue(contact);
 				if (historyQueue == null || historyQueue.size() == 0) {
 					continue;
@@ -46,7 +46,7 @@ public class HistoryHandler extends Thread {
 
 	}
 
-	protected void processMessage(JTextArea history, Message m) {
+	protected void processMessage(JTextArea history, NormalMessage m) {
 		history.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		history.append(m.getSourceID());
 		history.append(":");

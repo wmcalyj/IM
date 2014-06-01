@@ -12,8 +12,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import com.wmcalyj.im.encryption.AsymmetricEncryptionService;
-import com.wmcalyj.im.shared.data.InitMessage;
 import com.wmcalyj.im.shared.data.InstantMessageConstants;
+import com.wmcalyj.im.shared.data.message.InitMessage;
 
 public class EstablishCommunication {
 	private EstablishCommunication() {

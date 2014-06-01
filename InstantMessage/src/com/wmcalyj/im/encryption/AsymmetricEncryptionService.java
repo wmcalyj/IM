@@ -19,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.wmcalyj.im.shared.communication.Serialize;
 import com.wmcalyj.im.shared.data.InstantMessageConstants;
-import com.wmcalyj.im.shared.data.Message;
+import com.wmcalyj.im.shared.data.message.Message;
 
 public class AsymmetricEncryptionService {
 	private static AsymmetricEncryptionService SINGLETON = new AsymmetricEncryptionService();

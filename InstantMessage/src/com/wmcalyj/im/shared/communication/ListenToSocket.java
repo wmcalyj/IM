@@ -1,14 +1,16 @@
 package com.wmcalyj.im.shared.communication;
 
-import im.contacts.SingleContact;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
+import com.wmcalyj.im.client.data.FriendsTable;
 import com.wmcalyj.im.client.history.HistoryMap;
-import com.wmcalyj.im.shared.data.Message;
+import com.wmcalyj.im.shared.data.message.Message;
+import com.wmcalyj.im.shared.data.message.MessageType;
+import com.wmcalyj.im.shared.data.message.NormalMessage;
+import com.wmcalyj.im.shared.data.message.PublicKeyResponseMessage;
 
 public class ListenToSocket extends Thread {
 	private Socket socket;
@@ -46,12 +48,18 @@ public class ListenToSocket extends Thread {
 								continue;
 							}
 
-							System.out.println("Server message: "
-									+ fromServer.getMessage());
-							HistoryMap.addToQueue(fromServer.getSourceID(),
-									fromServer);
-							if (fromServer.equals("Bye "))
-								break;
+							if (fromServer.getMessageType().equals(
+									MessageType.PUBLICKEYRESPONSE)) {
+								FriendsTable.getTable().addToFriendsTable(
+										(PublicKeyResponseMessage) fromServer);
+							} else {
+								if (fromServer.getMessageType().equals(
+										MessageType.NORMALMESSAGE)) {
+									NormalMessage message = (NormalMessage) fromServer;
+									HistoryMap.addToQueue(
+											message.getSourceID(), message);
+								}
+							}
 						} catch (ClassNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

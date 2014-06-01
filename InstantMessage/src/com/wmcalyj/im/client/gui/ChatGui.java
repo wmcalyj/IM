@@ -30,10 +30,13 @@ import javax.swing.JTextArea;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.wmcalyj.im.client.data.FriendsTable;
 import com.wmcalyj.im.client.history.HistoryHandler;
 import com.wmcalyj.im.encryption.AsymmetricEncryptionService;
 import com.wmcalyj.im.shared.communication.WriteToSocket;
-import com.wmcalyj.im.shared.data.Message;
+import com.wmcalyj.im.shared.data.message.NormalMessage;
+import com.wmcalyj.im.shared.data.message.PublicKeyRequestMessage;
+import com.wmcalyj.im.shared.data.message.PublicKeyResponseMessage;
 
 public class ChatGui extends JFrame implements ActionListener {
 	/**
@@ -65,8 +68,17 @@ public class ChatGui extends JFrame implements ActionListener {
 		if (this.socket == null) {
 			System.out.println("Socket is null in ChatGui");
 		}
+		requestPublicKey(contactName);
 		(new HistoryHandler(history, this.target)).start();
 
+	}
+
+	private void requestPublicKey(String contactName) {
+		PublicKeyRequestMessage message = new PublicKeyRequestMessage(
+				contactName);
+		if (message.isValidMessage() && this.socket != null) {
+			WriteToSocket.getInstance(this.socket).sendMessage(message);
+		}
 	}
 
 	private void setView(String contactName) {
@@ -139,7 +151,8 @@ public class ChatGui extends JFrame implements ActionListener {
 		try {
 			byte[] encryptedText = AsymmetricEncryptionService.getService()
 					.encryptWithPrivateKey(text);
-			Message message = new Message(source, target, encryptedText);
+			NormalMessage message = new NormalMessage(source, target,
+					encryptedText);
 			System.out.println(message.toString());
 			socket = getSocket();
 			if (socket != null && !socket.isClosed()) {

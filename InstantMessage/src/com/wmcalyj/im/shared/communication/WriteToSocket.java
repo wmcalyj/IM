@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import com.wmcalyj.im.shared.data.Message;
+import com.wmcalyj.im.shared.data.message.Message;
 
 public class WriteToSocket {
 	// The reason why the write to socket needs to be a singlton is because,
