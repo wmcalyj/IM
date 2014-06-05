@@ -16,6 +16,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.crypto.BadPaddingException;
@@ -30,13 +31,11 @@ import javax.swing.JTextArea;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.wmcalyj.im.client.data.FriendsTable;
 import com.wmcalyj.im.client.history.HistoryHandler;
 import com.wmcalyj.im.encryption.AsymmetricEncryptionService;
 import com.wmcalyj.im.shared.communication.WriteToSocket;
 import com.wmcalyj.im.shared.data.message.NormalMessage;
 import com.wmcalyj.im.shared.data.message.PublicKeyRequestMessage;
-import com.wmcalyj.im.shared.data.message.PublicKeyResponseMessage;
 
 public class ChatGui extends JFrame implements ActionListener {
 	/**
@@ -149,8 +148,8 @@ public class ChatGui extends JFrame implements ActionListener {
 	public void sendToService(String source, String target, String text) {
 
 		try {
-			byte[] encryptedText = AsymmetricEncryptionService.getService()
-					.encryptWithPrivateKey(text);
+			ArrayList<byte[]> encryptedText = AsymmetricEncryptionService
+					.getService().encrypt(text, target);
 			NormalMessage message = new NormalMessage(source, target,
 					encryptedText);
 			System.out.println(message.toString());

@@ -1,19 +1,18 @@
 package com.wmcalyj.im.shared.data.message;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
-
-import com.wmcalyj.im.shared.communication.Serialize;
 
 public class NormalMessage extends Message {
 	private static final long serialVersionUID = -591804385684943848L;
 	private String sourceID;
 	private String destinationID;
-	private byte[] message;
+	private ArrayList<byte[]> message;
 	private String conversionID;
 
-	public NormalMessage(String from, String to, byte[] message) {
+	public NormalMessage(String from, String to, ArrayList<byte[]> message) {
 		this.sourceID = from;
 		this.destinationID = to;
 		this.message = message;
@@ -36,11 +35,11 @@ public class NormalMessage extends Message {
 		this.destinationID = destinationID;
 	}
 
-	public byte[] getMessage() {
+	public ArrayList<byte[]> getMessage() {
 		return message;
 	}
 
-	public void setMessage(byte[] message) {
+	public void setMessage(ArrayList<byte[]> message) {
 		this.message = message;
 	}
 
@@ -62,7 +61,7 @@ public class NormalMessage extends Message {
 				&& super.getMessageType().equals(MessageType.NORMALMESSAGE)) {
 			return StringUtils.isNotBlank(this.sourceID)
 					&& StringUtils.isNotBlank(this.destinationID)
-					&& this.message.length > 0 ? true : false;
+					&& message.size() > 0 ? true : false;
 		}
 		return false;
 	}
@@ -70,16 +69,11 @@ public class NormalMessage extends Message {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Message: ");
-		try {
-			sb.append("SourceID - ").append(this.sourceID)
-					.append(". DestinationID - ").append(this.destinationID)
-					.append(". ConversationID - ").append(this.conversionID)
-					.append(". Message - ")
-					.append((String) Serialize.deserialize(this.message));
-		} catch (ClassNotFoundException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		sb.append("SourceID - ").append(this.sourceID)
+				.append(". DestinationID - ").append(this.destinationID)
+				.append(". ConversationID - ").append(this.conversionID)
+				.append(". Message - ").append(this.message);
+
 		return sb.toString();
 	}
 }

@@ -5,16 +5,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import java.util.ArrayList;
 
 import com.wmcalyj.exceptions.message.InvalidMessageException;
-import com.wmcalyj.im.encryption.AsymmetricEncryptionService;
 import com.wmcalyj.im.server.dataManagement.OnlineUsersTable;
 import com.wmcalyj.im.shared.communication.SendMessageStrategy;
 import com.wmcalyj.im.shared.communication.Serialize;
@@ -197,54 +190,54 @@ public class CentralServerThread extends Thread {
 		return false;
 	}
 
-//	private void broadcastPublicKey(RegisteredUser newUser) {
-//		System.out.println("Broadcast public key: "
-//				+ newUser.getPublicKey().toString() + "for user: "
-//				+ newUser.getUid());
-//		PublicKeyResponseMessage publicKeyMessage = new PublicKeyMessage(
-//				newUser.getUid(), newUser.getPublicKey());
-//		ObjectOutputStream out = null;
-//		for (RegisteredUser user : OnlineUsersTable.getOnlineUsers().values()) {
-//			out = user.getOut();
-//			try {
-//				out.writeObject(publicKeyMessage);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//
-//		}
-//	}
+	// private void broadcastPublicKey(RegisteredUser newUser) {
+	// System.out.println("Broadcast public key: "
+	// + newUser.getPublicKey().toString() + "for user: "
+	// + newUser.getUid());
+	// PublicKeyResponseMessage publicKeyMessage = new PublicKeyMessage(
+	// newUser.getUid(), newUser.getPublicKey());
+	// ObjectOutputStream out = null;
+	// for (RegisteredUser user : OnlineUsersTable.getOnlineUsers().values()) {
+	// out = user.getOut();
+	// try {
+	// out.writeObject(publicKeyMessage);
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// }
+	// }
 
-//	private byte[] getMessage(Message message) {
-//		PublicKey publicKey = OnlineUsersTable.getOnlineUser(
-//				message.getSourceID()).getPublicKey();
-//
-//		try {
-//			if (!message.isInitMessage()) {
-//				System.out.println(((String) Serialize
-//						.deserialize(AsymmetricEncryptionService.getService()
-//								.decryptWithPublicKey(publicKey,
-//										message.getMessage()))));
-//				return AsymmetricEncryptionService.getService()
-//						.decryptWithPublicKey(publicKey, message.getMessage());
-//			}
-//		} catch (InvalidKeyException | NoSuchAlgorithmException
-//				| NoSuchPaddingException | IllegalBlockSizeException
-//				| BadPaddingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
+	// private byte[] getMessage(Message message) {
+	// PublicKey publicKey = OnlineUsersTable.getOnlineUser(
+	// message.getSourceID()).getPublicKey();
+	//
+	// try {
+	// if (!message.isInitMessage()) {
+	// System.out.println(((String) Serialize
+	// .deserialize(AsymmetricEncryptionService.getService()
+	// .decryptWithPublicKey(publicKey,
+	// message.getMessage()))));
+	// return AsymmetricEncryptionService.getService()
+	// .decryptWithPublicKey(publicKey, message.getMessage());
+	// }
+	// } catch (InvalidKeyException | NoSuchAlgorithmException
+	// | NoSuchPaddingException | IllegalBlockSizeException
+	// | BadPaddingException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (ClassNotFoundException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
 
-	private byte[] destinationNotOnline(String destinationID) {
+	private ArrayList<byte[]> destinationNotOnline(String destinationID) {
 		try {
 			return Serialize.serialize("Destination: " + destinationID
 					+ "is not online right now");
